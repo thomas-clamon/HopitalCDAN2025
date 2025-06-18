@@ -3,6 +3,7 @@ package com.example.hopitaldc25.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table (name = "Medecins")
@@ -23,6 +24,18 @@ public class MedecinEntity {
 
     @Column(name = "specialite")
     private String specialite;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_medecin")
+    List<RdvEntity> list_rdv;
+
+    public List<RdvEntity> getList_rdv() {
+        return list_rdv;
+    }
+
+    public void setList_rdv(List<RdvEntity> list_rdv) {
+        this.list_rdv = list_rdv;
+    }
 
     public Integer getID() {
         return ID;

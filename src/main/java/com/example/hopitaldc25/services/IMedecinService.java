@@ -1,9 +1,11 @@
 package com.example.hopitaldc25.services;
 
+import com.example.hopitaldc25.dtos.RdvOutDto;
 import com.example.hopitaldc25.entities.MedecinEntity;
 import com.example.hopitaldc25.enumerations.Specialite;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface IMedecinService {
 
@@ -16,4 +18,6 @@ public interface IMedecinService {
      * @return
      */
     MedecinEntity exist(Integer id);
+
+    List<RdvOutDto> listeRdv(Integer id_medecin);
 }

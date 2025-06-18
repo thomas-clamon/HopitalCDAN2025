@@ -6,10 +6,7 @@ import com.example.hopitaldc25.services.IMedecinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("Medecin")
@@ -17,22 +14,40 @@ public class MedecinController {
 
     @Autowired
     private IMedecinService medecinService;
+
     @PostMapping("add")
-    ResponseEntity ajouterMedecin(  @RequestBody MedecinInDto dto){
+    ResponseEntity ajouterMedecin(@RequestBody MedecinInDto dto) {
 
         // Verifier que les entré sont bonne
         Specialite specialite;
         //verification de l'enumeration specialite
         try {
             specialite = Specialite.valueOf(dto.getSpecialite());
-        }
-        catch (IllegalArgumentException illegalArgumentException){
+        } catch (IllegalArgumentException illegalArgumentException) {
             return new ResponseEntity("la specialité n'est pas bonne ", HttpStatusCode.valueOf(400));
         }
 
-        Integer ID =medecinService.ajouterMedecin(dto.getNom(), dto.getPrenom(), dto.getDate_naissance(), specialite);
+        Integer ID = medecinService.ajouterMedecin(dto.getNom(), dto.getPrenom(), dto.getDate_naissance(), specialite);
         return new ResponseEntity<>(ID, HttpStatusCode.valueOf(200));
 
     }
 
-}
+    @GetMapping("getrdv/{id}")
+    public ResponseEntity getRdv(@PathVariable String id) {
+        // verifier que le medecin existe
+        Integer ID;
+        try {
+            ID = Integer.parseInt(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("ID incorrect", HttpStatusCode.valueOf(400));
+        }
+            // verifie que le medecin existe
+            if (null == medecinService.exist(ID)) {
+                return new ResponseEntity("le medecin n'existe pas", HttpStatusCode.valueOf(204));
+            }
+            return new ResponseEntity(medecinService.listeRdv(ID), HttpStatusCode.valueOf(200));
+
+
+        }
+
+    }
