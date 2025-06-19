@@ -2,6 +2,8 @@ package com.example.hopitaldc25.services;
 
 import com.example.hopitaldc25.MedecinRepository.IMedecinRepository;
 import com.example.hopitaldc25.MedecinRepository.RdvRepository;
+import com.example.hopitaldc25.dtos.MedecinInDto;
+import com.example.hopitaldc25.dtos.MedecinOutDto;
 import com.example.hopitaldc25.dtos.RdvOutDto;
 import com.example.hopitaldc25.entities.MedecinEntity;
 import com.example.hopitaldc25.enumerations.Specialite;
@@ -9,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedecinService implements IMedecinService {
@@ -61,5 +63,24 @@ public class MedecinService implements IMedecinService {
     @Override
     public List<RdvOutDto> listRdvBetweenDates(Integer id_medecin, LocalDate start, LocalDate end) {
         return rdvRepository.getMedecinRdvByDate(id_medecin, start, end).stream().map(entity -> rdvService.toOutDto(entity)).toList();
+    }
+
+    @Override
+    public List<MedecinOutDto> getMedecinBySpecialité(String spe) {
+       return medecinRepository.findAllBySpecialite(spe).stream().map(this::entyToDto).toList(); // entity -< entyToDto(entity)
+    }
+
+    @Override
+    public List<MedecinOutDto> getMedecinBySpecialité(Integer limit, String spe) {
+        return medecinRepository.findTopNBySpecialite(limit, spe).stream().map(this::entyToDto).toList();
+    }
+
+    public MedecinOutDto entyToDto(MedecinEntity entity){
+
+        MedecinOutDto result = new MedecinOutDto();
+        result.setDisplay_name(entity.getPrenom() + " " + entity.getNom());
+        result.setAge(Period.between(entity.getDate_naissance(), LocalDate.now()).getYears());
+        return  result;
+
     }
 }

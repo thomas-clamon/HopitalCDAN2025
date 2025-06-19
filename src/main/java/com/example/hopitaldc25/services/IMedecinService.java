@@ -1,5 +1,7 @@
 package com.example.hopitaldc25.services;
 
+import com.example.hopitaldc25.dtos.MedecinInDto;
+import com.example.hopitaldc25.dtos.MedecinOutDto;
 import com.example.hopitaldc25.dtos.RdvOutDto;
 import com.example.hopitaldc25.entities.MedecinEntity;
 import com.example.hopitaldc25.enumerations.Specialite;
@@ -22,4 +24,8 @@ public interface IMedecinService {
     List<RdvOutDto> listeRdv(Integer id_medecin);
     
     List<RdvOutDto> listRdvBetweenDates(Integer id_medecin, LocalDate start, LocalDate end);
+
+    List<MedecinOutDto> getMedecinBySpecialité(String spe);
+
+    List<MedecinOutDto> getMedecinBySpecialité(Integer limit, String spe);
 }

@@ -72,5 +72,20 @@ public class MedecinController {
             }
             return new ResponseEntity(medecinService.listRdvBetweenDates(ID, debut, fin), HttpStatusCode.valueOf(200));
         }
+        @GetMapping("all/{specialite}")
+        public ResponseEntity getAllBySpecialite(@PathVariable("specialite") String spe, @RequestParam(required = false) Integer limit){
+
+        // on controle que la specialite fait partie de l'enumeration
+        String specialite = spe.toUpperCase();
+        try {
+            Specialite.valueOf(specialite);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity("la specialite n'existe pas", HttpStatusCode.valueOf(400));
+        }
+        if(null != limit)
+            return new ResponseEntity(medecinService.getMedecinBySpecialité(limit, specialite), HttpStatusCode.valueOf(200));
+        return new ResponseEntity(medecinService.getMedecinBySpecialité(specialite), HttpStatusCode.valueOf(200));
+
+        }
 
     }
