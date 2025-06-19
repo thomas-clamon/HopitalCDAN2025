@@ -20,4 +20,6 @@ public interface IMedecinService {
     MedecinEntity exist(Integer id);
 
     List<RdvOutDto> listeRdv(Integer id_medecin);
+    
+    List<RdvOutDto> listRdvBetweenDates(Integer id_medecin, LocalDate start, LocalDate end);
 }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("Medecin")
 public class MedecinController {
@@ -48,6 +50,27 @@ public class MedecinController {
             return new ResponseEntity(medecinService.listeRdv(ID), HttpStatusCode.valueOf(200));
 
 
+        }
+        @GetMapping("rdv/{id}")
+        public ResponseEntity getRdvDate (@PathVariable String id, @RequestParam("start")LocalDate debut, @RequestParam("end") LocalDate fin) {
+
+            // verifier que le medecin existe
+            Integer ID;
+            try {
+                ID = Integer.parseInt(id);
+            } catch (Exception e) {
+                return new ResponseEntity<>("ID incorrect", HttpStatusCode.valueOf(400));
+            }
+            // verifie que le medecin existe
+            if (null == medecinService.exist(ID)) {
+                return new ResponseEntity("le medecin n'existe pas", HttpStatusCode.valueOf(204));
+            }
+
+            // on verifie que la date fin n'est pas superieur a la date de deubut
+            if (debut.isAfter(fin)) {
+                return new ResponseEntity("Erreur de date", HttpStatusCode.valueOf(400));
+            }
+            return new ResponseEntity(medecinService.listRdvBetweenDates(ID, debut, fin), HttpStatusCode.valueOf(200));
         }
 
     }

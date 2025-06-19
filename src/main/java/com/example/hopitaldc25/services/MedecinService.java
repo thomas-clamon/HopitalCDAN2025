@@ -1,6 +1,7 @@
 package com.example.hopitaldc25.services;
 
 import com.example.hopitaldc25.MedecinRepository.IMedecinRepository;
+import com.example.hopitaldc25.MedecinRepository.RdvRepository;
 import com.example.hopitaldc25.dtos.RdvOutDto;
 import com.example.hopitaldc25.entities.MedecinEntity;
 import com.example.hopitaldc25.enumerations.Specialite;
@@ -19,6 +20,9 @@ public class MedecinService implements IMedecinService {
 
     @Autowired
     private RdvService rdvService;
+
+    @Autowired
+    private RdvRepository rdvRepository;
 
     @Override
     public Integer ajouterMedecin(String nom, String prenom, LocalDate date_naissance, Specialite specialite) {
@@ -52,5 +56,10 @@ public class MedecinService implements IMedecinService {
     public List<RdvOutDto> listeRdv(Integer id_medecin) {
         // on recupere la liste des rendez du medecin
         return medecinRepository.findById(id_medecin).get().getList_rdv().stream().map(entity -> rdvService.toOutDto(entity)).toList();
+    }
+
+    @Override
+    public List<RdvOutDto> listRdvBetweenDates(Integer id_medecin, LocalDate start, LocalDate end) {
+        return rdvRepository.getMedecinRdvByDate(id_medecin, start, end).stream().map(entity -> rdvService.toOutDto(entity)).toList();
     }
 }
